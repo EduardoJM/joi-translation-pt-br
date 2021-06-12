@@ -1,0 +1,10 @@
+{
+  "name": "joi-translation-pt-br",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "files": ["dist"],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.3.2"
+  }
+}
