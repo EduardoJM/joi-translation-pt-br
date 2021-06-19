@@ -1,37 +1,52 @@
-## Welcome to GitHub Pages
+## Motivação
 
-You can use the [editor on GitHub](https://github.com/EduardoJM/joi-translation-pt-br/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+Devido a necessidades de desenvolver aplicações para usuários reais brasileiros, há a importância de se utilizar validações e, ainda, devolver mensagens de erros das validações compreensíveis para o usuário final. Tendo em vista essas questões, esse é um projeto\biblioteca com o objetivo de traduzir as mensagens de erro do [Joi](https://joi.dev/) para português do Brasil.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Usando
 
-### Markdown
+### Instalando
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+É importante, antes de tudo, ressaltar que essa biblioteca não substitui o **Joi** e deve ser instalada junto do mesmo. Sendo assim, instale, via **yarn**:
+```bash
+yarn add joi-translation-pt-br
+```
+ou, via **npm**:
+```bash
+npm install joi-translation-pt-br
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### Usando
 
-### Jekyll Themes
+O seguinte exemplo, presente em `demo/index.ts`, demonstra como alterar as mensagens de validação para as disponibilizadas pelo pacote:
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/EduardoJM/joi-translation-pt-br/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+```typescript
+import Joi from 'joi';
+import {messages} from 'joi-translation-pt-br';
 
-### Support or Contact
+const schema = Joi.object().keys({
+    nome: Joi.string().required(),
+    email: Joi.string().email().required(),
+});
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+const result = schema.validate({
+    nome: 'Eduardo Oliveira',
+    email: 'aaaa'
+}, { messages });
+
+if (result.error) {
+    console.log(result.error.details);
+}
+```
+
+Rodando o arquivo com o `ts-node` tem-se o seguinte resultado no terminal:
+
+```javascript
+[
+  {
+    message: '"email" deve ser um e-mail válido',
+    path: [ 'email' ],
+    type: 'string.email',
+    context: {...}
+  }
+]
+```
