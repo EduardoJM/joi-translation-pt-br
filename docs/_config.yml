@@ -4,7 +4,5 @@ ssl: true
 title: "Joi Translation PT-BR"
 name: "Joi Translation PT-BR"
 author: "Eduardo Oliveira <eduardo_y05@outlook.com> (https://github.com/EduardoJM)"
-baseurl: ""
-url: "https://eduardojm.github.io/joi-translation-pt-br"
 github_url: "https://github.com/EduardoJM/joi-translation-pt-br"
 description: "Tradução das mensagens de validação do Joi"
