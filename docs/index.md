@@ -1,10 +1,12 @@
-## Motivação
+## Início
+
+### Motivação
 
 Devido a necessidades de desenvolver aplicações para usuários reais brasileiros, há a importância de se utilizar validações e, ainda, devolver mensagens de erros das validações compreensíveis para o usuário final. Tendo em vista essas questões, esse é um projeto\biblioteca com o objetivo de traduzir as mensagens de erro do [Joi](https://joi.dev/) para português do Brasil.
 
-## Usando
+### Usando
 
-### Instalando
+#### Instalando
 
 É importante, antes de tudo, ressaltar que essa biblioteca não substitui o **Joi** e deve ser instalada junto do mesmo. Sendo assim, instale, via **yarn**:
 ```bash
@@ -15,7 +17,7 @@ ou, via **npm**:
 npm install joi-translation-pt-br
 ```
 
-### Usando
+#### Usando
 
 O seguinte exemplo, presente em `demo/index.ts`, demonstra como alterar as mensagens de validação para as disponibilizadas pelo pacote:
 
