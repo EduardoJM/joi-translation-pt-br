@@ -5,7 +5,7 @@
 ![npm](https://img.shields.io/npm/v/joi-translation-pt-br)
 ![GitHub issues](https://img.shields.io/github/issues-raw/EduardoJM/joi-translation-pt-br)
 
-> :brazil: Pacote contendo mensagens de tradução para PT-BR do pacote [Joi](https://joi.dev/) ("the most powerful schema description language and data validator for JavaScript".
+> :brazil: Pacote contendo mensagens de tradução para PT-BR do pacote [Joi](https://joi.dev/) ("the most powerful schema description language and data validator for JavaScript").
 
 ## Motivação
 
@@ -25,9 +25,11 @@ Ou com o **npm**:
 npm install joi-translation-pt-br
 ```
 
-## Utilizando
+## Exemplos de Uso
 
-O exemplo abaixo encontra-se em `demo/index.ts`. 
+### Validando com schema
+
+O exemplo abaixo encontra-se em `examples/schema`. 
 
 ```javascript
 import Joi from 'joi';
@@ -60,6 +62,16 @@ Rodando o arquivo com o `ts-node`, tem-se no terminal a resposta:
   }
 ]
 ```
+
+### Celebrate Middleware
+
+```
+TODO: add this example here.
+```
+
+## Author
+
+This package was created by [Eduardo Oliveira](https://github.com/eduardoJM/) with the help of the community (see [contributors](https://github.com/EduardoJM/joi-translation-pt-br/graphs/contributors)).
 
 ## License
 [MIT License](https://github.com/EduardoJM/joi-translation-pt-br/blob/main/LICENSE) © [Eduardo Oliveira](http://eduardojm.github.io/)

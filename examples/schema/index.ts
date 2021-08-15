@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import {messages} from '../src';
+import {messages} from '../../src';
 
 const schema = Joi.object().keys({
     nome: Joi.string().required(),
