@@ -5,7 +5,7 @@
 ![npm](https://img.shields.io/npm/v/joi-translation-pt-br)
 ![GitHub issues](https://img.shields.io/github/issues-raw/EduardoJM/joi-translation-pt-br)
 
-> :brazil: Pacote contendo mensagens de tradução para PT-BR do pacote [Joi](https://joi.dev/) ("the most powerful schema description language and data validator for JavaScript").
+> :brazil: Pacote contendo mensagens de tradução para PT-BR das mensagens de erro de validação do pacote [Joi](https://joi.dev/) ("the most powerful schema description language and data validator for JavaScript").
 
 ## Motivação
 
@@ -65,8 +65,50 @@ Rodando o arquivo com o `ts-node`, tem-se no terminal a resposta:
 
 ### Celebrate Middleware
 
+```javascript
+import express from 'express';
+import { celebrate, errors, Joi } from 'celebrate';
+import { messages } from 'joi-translation-pt-br';
+
+const ExampleValidation = celebrate({
+    body: Joi.object().keys({
+        email: Joi.string().required().email(),
+        password: Joi.string().required(),
+    }),
+}, {
+    abortEarly: false,
+    messages: messages,
+});
+
+const app = express();
+app.use(express.json());
+
+app.post('/test', ExampleValidation, (req, res) => {
+    res.json();
+});
+
+app.use(errors());
+app.listen(3333);
 ```
-TODO: add this example here.
+
+Assim, fazendo requisições no formato errado, teremos a resposta:
+
+```json
+{
+  "statusCode": 400,
+  "error": "Bad Request",
+  "message": "Validation failed",
+  "validation": {
+    "body": {
+      "source": "body",
+      "keys": [
+        "email",
+        "password"
+      ],
+      "message": "\"email\" deve ser um e-mail válido. \"password\" é obrigatório"
+    }
+  }
+}
 ```
 
 ## Author
