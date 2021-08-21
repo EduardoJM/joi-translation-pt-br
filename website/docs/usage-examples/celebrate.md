@@ -81,4 +81,4 @@ Assim, fazendo requisições com dados não formatados corretamente, teremos res
 }
 ```
 
-É possível, ainda, customizar o middleware `errors()` do **celebrate** para customizar a resposta, mas isso não será tratado aqui, por enquanto.
+É possível, ainda, customizar o middleware `errors()` do **celebrate** para customizar a resposta. Isso pode ser visto no exemplo [Celebrate Middleware Customizado](celebrate-custom.md).
