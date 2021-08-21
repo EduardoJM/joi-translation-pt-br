@@ -111,6 +111,8 @@ Assim, fazendo requisições no formato errado, teremos a resposta:
 }
 ```
 
+É possível, também, customizar a resposta do middleware e isso pode ser feito de acordo com a documentação [aqui](https://eduardojm.github.io/joi-translation-pt-br/docs/usage-examples/celebrate-custom).
+
 ## Author
 
 This package was created by [Eduardo Oliveira](https://github.com/eduardoJM/) with the help of the community (see [contributors](https://github.com/EduardoJM/joi-translation-pt-br/graphs/contributors)).
