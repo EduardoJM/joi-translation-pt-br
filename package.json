@@ -1,7 +1,7 @@
 {
   "name": "joi-translation-pt-br",
   "description": "Mensagens de tradução dos erros de validação do Joi para PT-BR",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/index.js",
   "files": ["dist"],
   "license": "MIT",
@@ -18,7 +18,7 @@
     "brazil"
   ],
   "author": "Eduardo Oliveira <eduardo_y05@outlook.com>",
-  "homepage": "https://github.com/EduardoJM/joi-translation-pt-br",
+  "homepage": "https://eduardojm.github.io/joi-translation-pt-br/",
   "devDependencies": {
     "typescript": "^4.3.2"
   }
