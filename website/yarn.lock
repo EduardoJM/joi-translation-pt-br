@@ -1453,19 +1453,19 @@
   dependencies:
     "@docusaurus/core" "2.0.0-beta.4"
 
-"@docusaurus/plugin-google-analytics@^2.0.0-beta.5":
-  version "2.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@docusaurus/plugin-google-analytics/-/plugin-google-analytics-2.0.0-beta.5.tgz#a54197e7e60ab785dd14fb4e1a02887fc162d9c1"
-  integrity sha512-ncG+SCafoqFhtOMJwk9IZbzZCdy1bgmOjNCSfF6mmDp9laYYJBplBtqItIBQTuycIyKCxznKzi2q8l9989uMrA==
-  dependencies:
-    "@docusaurus/core" "2.0.0-beta.5"
-
 "@docusaurus/plugin-google-gtag@2.0.0-beta.4":
   version "2.0.0-beta.4"
   resolved "https://registry.yarnpkg.com/@docusaurus/plugin-google-gtag/-/plugin-google-gtag-2.0.0-beta.4.tgz#52f5922857680dfb2acc2099f08ac97d3edcb725"
   integrity sha512-MZ0Rr6LBZLKMVFXxV7Kr+l0U3Yz/Yn8L2E5z9DbgVi+9tyLn4xlMzuMPG3gN9TZ8kPcQ1ZWwv9crA+138UzIkw==
   dependencies:
     "@docusaurus/core" "2.0.0-beta.4"
+
+"@docusaurus/plugin-google-gtag@^2.0.0-beta.5":
+  version "2.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/@docusaurus/plugin-google-gtag/-/plugin-google-gtag-2.0.0-beta.5.tgz#415a4f98776e0ece17e96ca7e823022b5bf98316"
+  integrity sha512-FMWAXCLCUwEk7wykOAcM6vs3tHWVIU/T1PElqcoD7fh9521ocZ/5L8yyWWfJ+nX/90TVs+7nOFY0vNl2I2MYZg==
+  dependencies:
+    "@docusaurus/core" "2.0.0-beta.5"
 
 "@docusaurus/plugin-sitemap@2.0.0-beta.4":
   version "2.0.0-beta.4"

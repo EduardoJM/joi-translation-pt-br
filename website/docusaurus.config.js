@@ -14,7 +14,7 @@ module.exports = {
   projectName: 'joi-translation-pt-br', // Usually your repo name.
   trailingSlash: false,
   themeConfig: {
-    googleAnalytics: {
+    gtag: {
       trackingID: 'G-BHE4R64YZL',
     },
     navbar: {
