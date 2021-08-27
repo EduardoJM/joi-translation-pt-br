@@ -13,7 +13,6 @@ module.exports = {
   organizationName: 'EduardoJM', // Usually your GitHub org/user name.
   projectName: 'joi-translation-pt-br', // Usually your repo name.
   trailingSlash: false,
-  plugins: ['@docusaurus/plugin-google-analytics'],
   themeConfig: {
     googleAnalytics: {
       trackingID: 'G-BHE4R64YZL',
