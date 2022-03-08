@@ -119,3 +119,4 @@ This package was created by [Eduardo Oliveira](https://github.com/eduardoJM/) wi
 
 ## License
 [MIT License](https://github.com/EduardoJM/joi-translation-pt-br/blob/main/LICENSE) © [Eduardo Oliveira](http://eduardojm.github.io/)
+
