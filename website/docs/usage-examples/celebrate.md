@@ -81,4 +81,54 @@ Assim, fazendo requisições com dados não formatados corretamente, teremos res
 }
 ```
 
+### Customizando as Labels
+
+Perceba que temos nas mensagens os campos da seguinte forma: `\"password\"`. Para customizarmos essas labels podemos utilizar o objeto `.label("Senha")` da biblioteca Joi, conforme o exemplo abaixo:
+
+```typescript
+import express from 'express';
+import { celebrate, errors, Joi } from 'celebrate';
+import { messages } from 'joi-translation-pt-br';
+
+const ExampleValidation = celebrate({
+    body: Joi.object().keys({
+        email: Joi.string().required().email().label("E-mail"),
+        password: Joi.string().required().label("Senha"),
+    }),
+}, {
+    abortEarly: false,
+    messages: messages,
+});
+
+const app = express();
+app.use(express.json());
+
+app.post('/test', ExampleValidation, (req, res) => {
+    res.json();
+});
+
+app.use(errors());
+app.listen(3333);
+```
+
+A partir desse exemplo, teremos mensagens como:
+
+```json
+{
+  "statusCode": 400,
+  "error": "Bad Request",
+  "message": "Validation failed",
+  "validation": {
+    "body": {
+      "source": "body",
+      "keys": [
+        "email",
+        "password"
+      ],
+      "message": "\"E-mail\" deve ser um e-mail válido. \"Senha\" é obrigatório"
+    }
+  }
+}
+```
+
 É possível, ainda, customizar o middleware `errors()` do **celebrate** para customizar a resposta. Isso pode ser visto no exemplo [Celebrate Middleware Customizado](celebrate-custom.md).
