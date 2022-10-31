@@ -3,19 +3,34 @@ import { celebrate, Joi, isCelebrateError } from 'celebrate';
 import { messages } from '../../src';
 
 function customErrors() {
-    const fieldNames: { [key: string]: string; } = {
-        email: 'endereço de e-mail',
-        password: 'o campo de senha'
-    };
+    const buildObjWithValue = (paths: string[], value = '') => {
+        return paths.reduceRight((acc, item, index) => ({
+            [item]: index === paths.length - 1
+                ? value
+                : acc
+        }), {});
+    }
 
-    function replaceFieldNames(message: string) {
-        const keys = Object.keys(fieldNames);
-        let msg = message;
-        keys.forEach((k) => {
-            const regex = new RegExp(`\"${k}\"`, 'gi');
-            msg = msg.replace(regex, String(fieldNames[k]));
-        });
-        return msg;
+    const isObject = (item: any) => {
+        return (item && typeof item === 'object' && !Array.isArray(item));
+    }
+      
+    const mergeDeep = (target: any, source: any) => {
+        let output = Object.assign({}, target);
+        if (isObject(target) && isObject(source)) {
+            Object.keys(source).forEach(key => {
+                if (isObject(source[key])) {
+                    if (!(key in target)) {
+                        Object.assign(output, { [key]: source[key] });
+                    } else {
+                        output[key] = mergeDeep(target[key], source[key]);
+                    }
+                } else {
+                    Object.assign(output, { [key]: source[key] });
+                }
+            });
+        }
+        return output;
     }
 
     return (error: any, req: Request, res: Response, next: NextFunction) => {
@@ -23,26 +38,25 @@ function customErrors() {
             return next(error);
         }
         // is a celebrate error
-        const result: {
-            error: 'VALIDATION_ERROR',
-            messages: string[],
-        } = {
-            error: 'VALIDATION_ERROR',
-            messages: [],
-        };
+        let data = {};
         for (const [segment, joiError] of error.details.entries()) {
-            result.messages = joiError.details.map((err) => {
-                return replaceFieldNames(err.message);
+            joiError.details.forEach((err) => {
+                const obj = buildObjWithValue(err.path.map((item) => item.toString()), err.message);
+                data = mergeDeep(data, obj);
             });
         }
-        return res.status(400).json(result);
+        return res.status(400).json(data);
     };
 }
 
 const ExampleValidation = celebrate({
     body: Joi.object().keys({
-        email: Joi.string().required().email(),
-        password: Joi.string().required(),
+        email: Joi.string().required().email().label("E-mail"),
+        password: Joi.string().required().label("Senha"),
+        items: Joi.array().items(Joi.object().keys({
+            name: Joi.string().required().label("Nome"),
+            price: Joi.number().min(1).max(50).required().label("Preço"),
+        }))
     }),
 }, {
     abortEarly: false,
