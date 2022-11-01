@@ -1,7 +1,25 @@
 
 # Celebrate Middleware Customizado
 
-É possível customizar a resposta do middleware celebrate para termos as mensagens de resposta de acordo com o que queremos. Para isso, precisamos criar um novo método `errors()` que faça a mesma função que o original. Esse código foi baseado no original, disponível no [GitHub](https://github.com/arb/celebrate/blob/master/lib/celebrate.js#L180). Uma versão pronta/funcional desse exemplo pode ser consultada em [examples/celebrate_custom](https://github.com/EduardoJM/joi-translation-pt-br/tree/main/examples/celebrate_custom).
+É possível customizar a resposta do middleware celebrate para termos as mensagens de resposta de acordo com o que queremos. Para isso, precisamos criar uma nova função `errors()` que faça o papel que a função `errors()` original faz. Esse código foi escrito tendo como base o original, disponível no [GitHub](https://github.com/arb/celebrate/blob/master/lib/celebrate.js#L180). Uma versão pronta/funcional desse exemplo pode ser consultada em [examples/celebrate_custom](https://github.com/EduardoJM/joi-translation-pt-br/tree/main/examples/celebrate_custom). 
+
+O primeiro ponto que precisamos tratar aqui é como o retorno será feito: quando fizermos uma chamada `POST` para `/test` com dados incompletos, teremos um retorno estruturado da seguinte forma, onde os erros são estruturados de acordo com o path retornado pela biblioteca Joi:
+
+```json
+{
+	"email": "\"E-mail\" deve ser um e-mail válido",
+	"password": "\"Senha\" é obrigatório",
+	"items": {
+		"0": {
+			"price": "\"Preço\" é obrigatório"
+		},
+		"1": {
+			"name": "\"Nome\" é obrigatório",
+			"price": "\"Preço\" é obrigatório"
+		}
+	}
+}
+```
 
 ## Introdução
 
@@ -23,7 +41,7 @@ Isso é apenas para o formato de iteração que utilizamos aqui (o mesmo do cód
 
 ## Criando o middleware
 
-Vamos criar um middleware que substitua o nome dos campos das mensagens por nomes mais reais e humanos, por exemplo: troque `"email"` por `endereço de e-mail`. Assim, criamos uma função `customErrors` que faz isso:
+Vamos criar um middleware que processe os dados retornados pela lib Joi e construa objetos com o `path` e a `message` e que, posteriormente, faça um *deep merge* para isso. Primeiro, algumas funções utilitárias, como o `mergeDeep()`:
 
 ```typescript
 import express, { Request, Response, NextFunction } from 'express';
@@ -31,26 +49,41 @@ import { celebrate, Joi, isCelebrateError } from 'celebrate';
 import { messages } from '../../src';
 
 function customErrors() {
-    const fieldNames: { [key: string]: string; } = {
-        email: 'endereço de e-mail',
-        password: 'o campo de senha'
-    };
+    const buildObjWithValue = (paths: string[], value = '') => {
+        return paths.reduceRight((acc, item, index) => ({
+            [item]: index === paths.length - 1
+                ? value
+                : acc
+        }), {});
+    }
 
-    function replaceFieldNames(message: string) {
-        const keys = Object.keys(fieldNames);
-        let msg = message;
-        keys.forEach((k) => {
-            const regex = new RegExp(`\"${k}\"`, 'gi');
-            msg = msg.replace(regex, String(fieldNames[k]));
-        });
-        return msg;
+    const isObject = (item: any) => {
+        return (item && typeof item === 'object' && !Array.isArray(item));
+    }
+      
+    const mergeDeep = (target: any, source: any) => {
+        let output = Object.assign({}, target);
+        if (isObject(target) && isObject(source)) {
+            Object.keys(source).forEach(key => {
+                if (isObject(source[key])) {
+                    if (!(key in target)) {
+                        Object.assign(output, { [key]: source[key] });
+                    } else {
+                        output[key] = mergeDeep(target[key], source[key]);
+                    }
+                } else {
+                    Object.assign(output, { [key]: source[key] });
+                }
+            });
+        }
+        return output;
     }
 
     // middleware aqui
 }
 ```
 
-Perceba que a função acima não apresenta, já, o middleware. Apenas uma mensagem de onde ele estará localizado. Isso foi intencional para que vocês percebam que, de fato, o middleware é bem pequeno:
+O middleware, de fato é bem pequeno e pode ser resumido a:
 
 ```typescript
 return (error: any, req: Request, res: Response, next: NextFunction) => {
@@ -58,19 +91,14 @@ return (error: any, req: Request, res: Response, next: NextFunction) => {
         return next(error);
     }
     // is a celebrate error
-    const result: {
-        error: 'VALIDATION_ERROR',
-        messages: string[],
-    } = {
-        error: 'VALIDATION_ERROR',
-        messages: [],
-    };
+    let data = {};
     for (const [segment, joiError] of error.details.entries()) {
-        result.messages = joiError.details.map((err) => {
-            return replaceFieldNames(err.message);
+        joiError.details.forEach((err) => {
+            const obj = buildObjWithValue(err.path.map((item) => item.toString()), err.message);
+            data = mergeDeep(data, obj);
         });
     }
-    return res.status(400).json(result);
+    return res.status(400).json(data);
 };
 ```
 
@@ -82,19 +110,34 @@ import { celebrate, Joi, isCelebrateError } from 'celebrate';
 import { messages } from '../../src';
 
 function customErrors() {
-    const fieldNames: { [key: string]: string; } = {
-        email: 'endereço de e-mail',
-        password: 'o campo de senha'
-    };
+    const buildObjWithValue = (paths: string[], value = '') => {
+        return paths.reduceRight((acc, item, index) => ({
+            [item]: index === paths.length - 1
+                ? value
+                : acc
+        }), {});
+    }
 
-    function replaceFieldNames(message: string) {
-        const keys = Object.keys(fieldNames);
-        let msg = message;
-        keys.forEach((k) => {
-            const regex = new RegExp(`\"${k}\"`, 'gi');
-            msg = msg.replace(regex, String(fieldNames[k]));
-        });
-        return msg;
+    const isObject = (item: any) => {
+        return (item && typeof item === 'object' && !Array.isArray(item));
+    }
+      
+    const mergeDeep = (target: any, source: any) => {
+        let output = Object.assign({}, target);
+        if (isObject(target) && isObject(source)) {
+            Object.keys(source).forEach(key => {
+                if (isObject(source[key])) {
+                    if (!(key in target)) {
+                        Object.assign(output, { [key]: source[key] });
+                    } else {
+                        output[key] = mergeDeep(target[key], source[key]);
+                    }
+                } else {
+                    Object.assign(output, { [key]: source[key] });
+                }
+            });
+        }
+        return output;
     }
 
     return (error: any, req: Request, res: Response, next: NextFunction) => {
@@ -102,19 +145,14 @@ function customErrors() {
             return next(error);
         }
         // is a celebrate error
-        const result: {
-            error: 'VALIDATION_ERROR',
-            messages: string[],
-        } = {
-            error: 'VALIDATION_ERROR',
-            messages: [],
-        };
+        let data = {};
         for (const [segment, joiError] of error.details.entries()) {
-            result.messages = joiError.details.map((err) => {
-                return replaceFieldNames(err.message);
+            joiError.details.forEach((err) => {
+                const obj = buildObjWithValue(err.path.map((item) => item.toString()), err.message);
+                data = mergeDeep(data, obj);
             });
         }
-        return res.status(400).json(result);
+        return res.status(400).json(data);
     };
 }
 ```
@@ -126,8 +164,12 @@ Agora, basta substituirmos o middleware no app express:
 ```typescript
 const ExampleValidation = celebrate({
     body: Joi.object().keys({
-        email: Joi.string().required().email(),
-        password: Joi.string().required(),
+        email: Joi.string().required().email().label("E-mail"),
+        password: Joi.string().required().label("Senha"),
+        items: Joi.array().items(Joi.object().keys({
+            name: Joi.string().required().label("Nome"),
+            price: Joi.number().min(1).max(50).required().label("Preço"),
+        }))
     }),
 }, {
     abortEarly: false,
