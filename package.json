@@ -7,7 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf ./dist && webpack --mode production"
+    "build": "rm -rf ./dist && yarn tsc"
   },
   "license": "MIT",
   "repository": {
