@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "celebrate": "^15.0.0",
-    "express": "^4.17.3"
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
